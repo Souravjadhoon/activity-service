@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Component
 public class config {
-    @LoadBalanced
+    //@LoadBalanced removing for deploy
     @Bean
     public RestTemplate restTemplate(){
         return new RestTemplate();
@@ -26,10 +26,15 @@ public class config {
     @Bean
     public ProducerFactory<String, ActivityIngestionResponse> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.99.100:9092");
+        //configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.99.100:9092");
+        //comment for deploy
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
-        configProps.put("schema.registry.url", "http://192.168.99.100:8085");
+        //configProps.put("schema.registry.url", "http://192.168.99.100:8085");
+        //comment for deploy
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        configProps.put("schema.registry.url", "http://localhost:8085");
+
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
