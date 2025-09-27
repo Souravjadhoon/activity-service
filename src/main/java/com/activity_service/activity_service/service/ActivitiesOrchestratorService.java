@@ -99,7 +99,7 @@ public class ActivitiesOrchestratorService {
         try{
             HttpEntity<ActivitiesRequest> validationReqEntity = new HttpEntity<>(activityRequest,headers);
             //"http://validation-service/v1/risk/validation"
-            ResponseEntity<String> responseEntity = restTemplate.exchange("validation.service.url=https://validation-service-production-1151.up.railway.app/v1/risk/validation", HttpMethod.POST,validationReqEntity,String.class);
+            ResponseEntity<String> responseEntity = restTemplate.exchange("https://validation-service-production-1151.up.railway.app/v1/risk/validation", HttpMethod.POST,validationReqEntity,String.class);
             String response = responseEntity.getBody();
             validationResponseObject = new JSONObject(response);
             String validationStatus = validationResponseObject.optString("validationStatus");
