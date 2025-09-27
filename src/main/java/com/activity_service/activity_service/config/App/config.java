@@ -34,6 +34,8 @@ public class config {
         //comment for deploy
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         configProps.put("schema.registry.url", "http://localhost:8085");
+        
+
 
         return new DefaultKafkaProducerFactory<>(configProps);
     }
