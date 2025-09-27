@@ -25,7 +25,7 @@ services:
       # Listen on all interfaces inside Docker
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       # Advertise localhost to outside clients (Gitpod/Spring app)
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://9092-souravjadho-activityser-vn233j9jirm.ws-us121.gitpod.io:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
 
