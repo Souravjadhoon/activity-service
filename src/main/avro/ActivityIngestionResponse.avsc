@@ -1,0 +1,66 @@
+[
+  {
+    "type": "record",
+    "name": "ScreeningStatus",
+    "namespace": "com.activity.avro",
+    "fields": [
+      { "name": "status", "type": "string" },
+      { "name": "status_desc", "type": "string" },
+      { "name": "status_timestamp", "type": "string" }
+    ]
+  },
+  {
+    "type": "record",
+    "name": "MetaData",
+    "namespace": "com.activity.avro",
+    "fields": [
+      { "name": "eventId", "type": "string" },
+      { "name": "activity_request_id", "type": "string" }
+    ]
+  },
+  {
+    "type": "record",
+    "name": "Errors",
+    "namespace": "com.activity.avro",
+    "fields": [
+      { "name": "in", "type": "string" },
+      { "name": "message", "type": "string" }
+    ]
+  },
+  {
+    "type": "record",
+    "name": "Error",
+    "namespace": "com.activity.avro",
+    "fields": [
+      { "name": "id", "type": "string" },
+      { "name": "name", "type": "string" },
+      { "name": "message", "type": "string" },
+      {
+        "name": "errors",
+        "type": {
+          "type": "array",
+          "items": "com.activity.avro.Errors"
+        }
+      }
+    ]
+  },
+  {
+    "type": "record",
+    "name": "ActivityResponse",
+    "namespace": "com.activity.avro",
+    "fields": [
+      { "name": "application_name", "type": ["null", "string"],"default": null},
+      { "name": "metaData", "type": "com.activity.avro.MetaData" },
+      { "name": "error", "type": ["null", "com.activity.avro.Error"], "default": null},
+      { "name": "screeningStatus", "type": ["null", "com.activity.avro.ScreeningStatus"], "default": null}
+    ]
+  },
+  {
+    "type": "record",
+    "name": "ActivityIngestionResponse",
+    "namespace": "com.activity.avro",
+    "fields": [
+      { "name": "activityResponse", "type": "com.activity.avro.ActivityResponse" }
+    ]
+  }
+]

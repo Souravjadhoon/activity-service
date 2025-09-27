@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Activity Ingestion Form</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2em auto; }
+    label { display: block; margin-top: 1em; }
+    input, textarea { width: 100%; padding: 0.5em; margin-top: 0.3em; }
+    button { margin-top: 1em; padding: 0.7em 1.5em; }
+    pre { background: #f4f4f4; padding: 1em; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Send Activity Request</h1>
+  <form id="activityForm">
+    <label>
+      x-svb-correlation-id (optional)
+      <input type="text" id="correlationId" placeholder="e.g. abc123" />
+    </label>
+
+    <label>
+      Request ID
+      <input type="text" id="requestId" placeholder="e.g. {{UUID}}" />
+    </label>
+
+    <label>
+      Event ID
+      <input type="text" id="eventId" placeholder="e.g. EVT-001" required />
+    </label>
+
+    <label>
+      — you can add more fields here (e.g. other metadata) —
+    </label>
+
+    <button type="submit">Send to /v1/risk/activities</button>
+  </form>
+
+  <h2>Server Response</h2>
+  <pre id="responseArea">Waiting...</pre>
+
+  <script>
+    document.getElementById('activityForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const corrId = document.getElementById('correlationId').value.trim();
+      const reqId  = document.getElementById('requestId').value.trim() || '';
+      const evtId  = document.getElementById('eventId').value.trim();
+
+      // Build the JSON payload to match your ActivitiesRequest model
+      const payload = {
+        id: reqId,
+        data: {
+          eventMetadata: {
+            eventId: evtId
+          }
+        }
+      };
+
+      try {
+        const resp = await fetch('http://localhost:8089/v1/risk/activities', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(corrId && { 'x-svb-correlation-id': corrId })
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const text = await resp.text();
+        document.getElementById('responseArea').textContent =
+          `HTTP ${resp.status} ${resp.statusText}\n\n` + text;
+      } catch (err) {
+        document.getElementById('responseArea').textContent =
+          'Error sending request:\n' + err;
+      }
+    });
+  </script>
+</body>
+</html>
