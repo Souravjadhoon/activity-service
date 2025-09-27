@@ -65,28 +65,6 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
-  eureka-server:
-    build: ./eureka-server
-    container_name: eureka-server
-    ports:
-      - "8761:8761"
-    depends_on:
-      - broker
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-
-  validation-service:
-    build: ./validation-service
-    container_name: validation-service
-    ports:
-      - "8989:8989"
-    depends_on:
-      - mysql
-      - eureka-server
-      - broker
-      - schema-registry
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
 
 volumes:
   mysql_data:
