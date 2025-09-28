@@ -4,6 +4,7 @@ import com.activity.avro.ActivityIngestionResponse;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -17,6 +18,15 @@ import java.util.Map;
 
 @Component
 public class config {
+
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
+
+    @Value("${spring.kafka.properties.schema.registry.url}")
+    private String schemaRegistryUrl;
+
+
+
     //@LoadBalanced removing for deploy
     @Bean
     public RestTemplate restTemplate(){
@@ -32,9 +42,9 @@ public class config {
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
         //configProps.put("schema.registry.url", "http://192.168.99.100:8085");
         //comment for deploy
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        configProps.put("schema.registry.url", "http://localhost:8085");
-        
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        configProps.put("schema.registry.url", schemaRegistryUrl);
+
 
 
         return new DefaultKafkaProducerFactory<>(configProps);
