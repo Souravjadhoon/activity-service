@@ -60,7 +60,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: validation_db
+      MYSQL_DATABASE: activity_db
     ports:
       - "3307:3306"
     volumes:
