@@ -1,5 +1,5 @@
 #new deployment code
-version: '2'
+version: '3.8'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
@@ -23,8 +23,10 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092
+      # 👇 internal (Docker) + external (for Spring Boot in Gitpod)
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   schema-registry:
@@ -34,7 +36,7 @@ services:
     depends_on:
       - broker
     ports:
-      - "8085:8081"
+      - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
@@ -77,8 +79,14 @@ services:
       - "8089:8089"
     environment:
       SPRING_PROFILES_ACTIVE: default
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/activity_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: broker:29092
     command: >
-      bash -c "sleep 20 && java -jar target/activity-service.jar"
+      bash -c "sleep 25 && java -jar app.jar"
+    volumes:
+      - ./target/activity-service-0.0.1-SNAPSHOT.jar:/app.jar
 
 volumes:
   mysql_data:
